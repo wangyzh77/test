@@ -2053,3 +2053,8 @@ class MapSum:
             t = t[k]
 
         return res
+
+# 2020-11-09
+
+def f(x):
+    pass
