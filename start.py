@@ -1893,13 +1893,13 @@ class Solution:
 from aliyunsdkcore import client
 from aliyunsdksts.request.v20150401 import AssumeRoleRequest
 
-clt = client.AcsClient('LTAI4GLBM8GRaLQrDadHrsyv', '4OjV4KqKPFsrUJdPEE0bmlyaVtLnoT', 'cn-shanghai')
+clt = client.AcsClient('', '', '')
 
 # 构造"AssumeRole"请求
 request = AssumeRoleRequest.AssumeRoleRequest()
 
 # 指定角色
-request.set_RoleArn('acs:ram::1613474510948997:role/wangyzh')
+request.set_RoleArn('')
 
 # 设置会话名称，审计服务使用此名称区分调用者
 request.set_RoleSessionName('maybe')
@@ -2021,35 +2021,83 @@ def f(s):
     return ' '.join(s[::-1])
 print(f(s))
 
-class MapSum:
 
-    def __init__(self):
-        """
-        Initialize your data structure here.
-        """
-        self.tree = {}
-        self.d = {}
-        
-    def insert(self, key: str, val: int) -> None:
-        v = self.d.get(key, 0)
-        self.d[key] = val
-        t = self.tree
-        for char in key:
-            if char not in t:
-                t[char] = {}
-                t[char]["val"] = val
-            else:
-                t[char]["val"] += val - v  # 同步更新差值
-            t = t[char]
--['']
-    def sum(self, prefix: str) -> int:
-        res = 0
-        t = self.tree
-        for k in prefix:
-            if k not in t:
-                return 0
-            else:
-                res = t[k]["val"]
-            t = t[k]
+def g(arr1, arr2):
+    n1 = len(arr1)
+    n2 = len(arr2)
+    order = dict()
+    for i in range(n2):
+        order[arr2[i]] = i + 1
+    arr3, arr4 = [], []
+    for ele in arr1:
+        if order.get(ele) is not None:
+            arr3.append(ele)
+        else:
+            arr4.append(ele)
+    def f(ele):
+        return order[ele]
+    arr3.sort(key=f, reverse=False)
+    arr4.sort()
+    return arr3 + arr4
+arr1 = [2,3,1,3,2,4,6,7,9,2,19]
+arr2 = [2,1,4,3,9,6]
+print(g(arr1, arr2))
 
-        return res
+def f(customers, grumpy, X):
+    def windows(i):
+        ans = 0
+        for j in range(X):
+            ans += customers[i+j] * grumpy[i+j]
+        return ans
+    n = len(customers)
+    if n <= X:
+        return sum(customers)
+    ans = 0
+    for i in range(n):
+        if grumpy[i] == 0:
+            ans += customers[i]
+    p = 0
+    delta = 0
+    while p <= n-X:
+        if grumpy[p] == 1:
+            delta = max(delta, windows(p))
+        p += 1
+    delta = max(delta, windows(p-1))
+    return ans + delta
+a = [6,10,2,1,7,9]
+b = [1,0,0,0,0,1]
+c = 3
+print(f(a, b, c))
+
+def f(s, t, maxCost):
+    def getCost(s1, s2):
+        return abs(ord(s1) - ord(s2))    
+
+    n = len(s)
+    if n == 0: return 0
+
+    p = 0
+    while p < n:
+        if getCost(s[p], t[p]) <= maxCost:
+            break
+        p += 1
+    if p == n: return 0
+    left, right = p, p
+    cur_cost = getCost(s[p], t[p])
+    cur_length = 1
+    ans = 1
+    while right < n-1:
+        right += 1
+        cur_length += 1
+        cur_cost = cur_cost + getCost(s[right], t[right])
+        while cur_cost > maxCost:
+            cur_cost -= getCost(s[left], t[left])
+            cur_length -= 1
+            left += 1
+        ans = max(ans, cur_length)
+    return ans
+
+a = "abcd"
+b = "abcd"
+c = 0
+print(f(a,b,c))
