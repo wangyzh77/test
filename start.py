@@ -563,9 +563,9 @@ df = pd.DataFrame(d)
 print(df.columns)
 
 def takeSecond(ele):
-    return ele[1]
-l = [(0,2),(1,5),(2,3)]
-l.sort(key=takeSecond, reverse=True)
+    return ele[0]
+l = [[31176229,84553602],[59484421,74029340],[8413784,65312321],[34575198,108169522],[49798315,88462685],[29566413,114369939],[12776091,37045071],[11759956,61001829],[37806862,80806032],[82906996,118404277]]
+l.sort(key=takeSecond)#, reverse=True)
 print(l)
 
 
@@ -1368,6 +1368,8 @@ for i in range(2, 1):
     print('h')
 
 print(ord('a'), '->', ord('z'))
+print(ord('A'), '->', ord('Z'))
+print(ord('z') - ord('Z'))
 print(chr(97), '->', chr(122))
 for j in range(97, 123): print(chr(j), end='')
 
@@ -2101,3 +2103,266 @@ a = "abcd"
 b = "abcd"
 c = 0
 print(f(a,b,c))
+
+l = [1,2,3]
+l += l
+print(l)
+
+# 同向 保鲜 理解 改变
+def f(gas, cost):
+    def findStart(start):
+        if start >= n:
+            return n
+        while start < n:
+            if gas[start] >= cost[start]:
+                break
+            start += 1
+        return start
+
+    n = len(gas)
+    gas += gas
+    cost += cost
+
+    start = 0
+    start = findStart(start)
+    if start == n: return -1
+
+    res = gas[start] - cost[start]
+    end = start + 1
+    while True:
+        res = gas[end] + res - cost[end]
+        if res < 0:
+            start = findStart(end)
+            if start == n: return -1
+            res = gas[start] - cost[start]
+            end = start + 1
+        else:
+            if end - start == n:
+                return start
+            end += 1
+gas  = [3,3,4]
+cost = [3,4,4]
+print(f(gas, cost))
+
+left, right = 0, 3
+print((left + right) // 2)
+
+def f(nums, target):
+    def getMid(left, right):
+        if left <= right: return left + (right - left) // 2
+        else:
+            maybe = left + (right + n - left) // 2
+            if maybe >= n: return maybe - n
+            else: return maybe
+
+    n = len(nums)
+    if n == 1:
+        if nums[0] == target: return 0
+        else: return -1
+    right = None
+    for i in range(n-1):
+        if nums[i] > nums[i+1]:
+            right = i
+            break
+    if right is None: right = n-1
+    if right == n-1: left = 0
+    else: left = right + 1
+    if target < nums[left] or target > nums[right]: return -1
+
+    # while left != right:
+    while nums[left] <= nums[right]:
+        mid = getMid(left, right)
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            if mid == n-1: left = 0
+            else: left = mid + 1
+        elif nums[mid] > target:
+            if mid == 0: right = n-1
+            else: right = mid - 1
+        # if target < nums[left] or target > nums[right]: return -1
+    if nums[left] == target: return left
+    return -1
+nums = [242,245,249,250,252,253,257,262,263,268,275,280,282,283,285,290,292,293,297,299,4,5,8,9,10,14,16,17,18,20,22,23,29,32,36,39,47,51,56,68,70,73,75,77,79,81,82,89,98,100,107,108,112,114,115,117,118,119,128,131,134,139,142,147,148,154,161,162,165,167,171,172,174,177,180,183,189,190,191,192,194,197,200,203,206,207,208,209,210,212,217,220,223,226,227,231,237]
+# print(nums[20], nums[37], nums[38])
+target = 54
+print(f(nums, target))
+
+print(round(1.75*1.75*18.5, 2), round(1.75*1.75*23.9, 2))
+
+def f(points):
+    def takeFirst(x):
+        return x[0]
+    n = len(points)
+    if n == 0 or n == 1: return n
+    points.sort(key=takeFirst)
+    p = 1
+    cur = points[0]
+    ans = 0
+    while p < n:
+        if cur[0] == points[p][0]:
+            cur = [cur[0], min(cur[1], points[p][1])]
+            p += 1
+        elif cur[1] < points[p][0]:
+            ans += 1
+            cur = points[p]
+            p += 1
+        else:
+            cur = [points[p][0], min(cur[1], points[p][1])]
+            p += 1
+    return ans + 1
+l = [[31176229,84553602],[59484421,74029340],[8413784,65312321],[34575198,108169522],[49798315,88462685],[29566413,114369939],[12776091,37045071],[11759956,61001829],[37806862,80806032],[82906996,118404277]]
+print(f(l))
+
+print(not False)
+
+class Node:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.nxt = None
+        self.prv = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = Node(0, 0)
+        self.tail = Node(0, 0)
+        self.size = 0
+        self.head.nxt = self.tail
+        self.tail.prv = self.head
+
+    def addLast(self, node):
+        node.prv = self.tail.prv
+        node.nxt = self.tail
+        self.tail.prv.nxt = node
+        self.tail.prv = node
+        self.size += 1
+    
+    def remove(self, node):
+        node.prv.nxt = node.nxt
+        node.nxt.prv = node.prv
+        self.size -= 1
+    
+    def removeFirst(self):
+        if self.head.nxt == self.tail:
+            return -1
+        first_node = self.head.nxt
+        self.remove(first_node)
+        return first_node
+
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.hashmap = dict()
+        self.cache = LinkedList()
+        self.capacity = capacity
+
+    def makeRecently(self, key):
+        node = self.hashmap[key]
+        self.cache.remove(node)
+        self.cache.addLast(node)
+
+    def addRecently(self, key, val):
+        node = Node(key, val)
+        self.cache.addLast(node)
+        self.hashmap[key] = node
+    
+    def deleteKey(self, key):
+        node = self.hashmap[key]
+        self.cache.remove(node)
+        self.hashmap.pop(key)
+    
+    def removeLeastRecently(self):
+        node = self.cache.removeFirst()
+        key = node.key
+        self.hashmap.pop(key)
+
+    def get(self, key: int) -> int:
+        if self.hashmap.get(key) is None:
+            return -1
+        self.makeRecently(key)
+        return self.hashmap[key].val
+
+    def put(self, key: int, value: int) -> None:
+        if self.hashmap.get(key) is not None:
+            self.deleteKey(key)
+            self.addRecently(key, value)
+            return 
+        if self.capacity == self.cache.size:
+            self.removeLeastRecently()
+        self.addRecently(key, value)
+
+d = {'wyz':0, 'dd':1}
+l = [(key, val) for key, val in d.items()]
+print(l[0][1])
+
+ans = [[1] * i for i in range(1, 4)]
+print(ans)
+
+from collections import Counter
+l = Counter()
+print(l, type(l))
+l = [1,2,3,4,4,5]
+print(Counter(l).values())
+
+def change(c):
+    num = ord(c)
+    if 97 <= num <= 122:
+        return chr(num - 32)
+    else:
+        return chr(num + 32)
+print(change('a'), change('A'))
+
+S = '123'
+# S[0] = 'c'
+print(type(''.join(list(S))))
+
+a, b = divmod(10, 3)
+l = list(range(1, 11))
+for i in range(a):
+    if i < b:
+
+print(a, b)
+
+print([None for _ in range(3)])
+print(int('1111', 2))
+print(4 * 2 ** 3)
+
+import torchvision
+
+print(torchvision.__version__)
+print(torchvision.__path__) 
+
+S = '12345'
+print(S[1:999])
+
+def f(S):
+    n = len(S)
+    for i in range(1, n):
+        for j in range(1, n-i+1):
+            fst = int(S[:i])
+            scd = int(S[i:i+j])
+            p = i+j
+            ans = [fst, scd]
+            while p < n:                    
+                trd = fst + scd
+                m = len(str(trd))
+                tgt = int(S[p:p+m])
+                if tgt != trd:
+                    break
+                else:
+                    ans.append(trd)
+                    fst = scd
+                    scd = trd
+                    p = p + m
+                    if p == n: return ans
+    return []
+S = "11235813"
+print(f(S))
+
+print(ord('3') - ord('0'))
+
+from functools import reduce
+print(reduce(lambda x, y : x*y, [1,2,3,4,5]))
+
+print(-1 % 256)
